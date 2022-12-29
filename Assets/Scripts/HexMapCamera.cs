@@ -103,7 +103,7 @@ public class HexMapCamera : MonoBehaviour
                 AdjustZoom(zoomDelta);
             }
         }
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(2))
         {
             Plane plane = new Plane(Vector3.up, Vector3.zero);
 
@@ -116,7 +116,7 @@ public class HexMapCamera : MonoBehaviour
                 dragStartPosition = ray.GetPoint(entry);
             }
         }
-        if (Input.GetMouseButton(1))
+        if (Input.GetMouseButton(2))
         {
             Plane plane = new Plane(Vector3.up, Vector3.zero);
 
@@ -130,11 +130,11 @@ public class HexMapCamera : MonoBehaviour
                 newPosition = ClampPosition(transform.position + dragStartPosition - dragCurrentPosition);
             }
         }
-        if (Input.GetMouseButtonDown(2))
+        if (Input.GetMouseButtonDown(1))
         {
             rotateStartPosition = Input.mousePosition;
         }        
-        if (Input.GetMouseButton(2))
+        if (Input.GetMouseButton(1))
         {
             rotateCurrentPosition = Input.mousePosition;
 
