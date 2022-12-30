@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f2ac251d2d31804ca9d1003336adf55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  color: {r: 0, g: 0, b: 0, a: 0}
+  chunk: {fileID: 0}
   coordinates:
     x: 0
     z: 0
@@ -56,3 +56,4 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  roads: 000000000000
