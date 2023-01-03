@@ -10,7 +10,7 @@ public class HexMapEditor : MonoBehaviour
         Yes,
         No
     }
-    OptionalToggle riverMode, roadMode;
+    OptionalToggle riverMode, roadMode, walledMode;
     public Color[] colors;
 	public HexGrid hexGrid;
 
@@ -143,6 +143,10 @@ public class HexMapEditor : MonoBehaviour
             {
                 cell.RemoveRoads();
             }
+            if (walledMode != OptionalToggle.Ignore)
+            {
+                cell.Walled = walledMode == OptionalToggle.Yes;
+            }
             if (isDrag)
             {
                 HexCell otherCell = cell.GetNeighbor(dragDirection.Opposite());
@@ -169,6 +173,11 @@ public class HexMapEditor : MonoBehaviour
     public void SetRoadMode(int mode)
     {
         roadMode = (OptionalToggle)mode;
+    }
+
+    public void SetWalledMode(int mode)
+    {
+        walledMode = (OptionalToggle)mode;
     }
 
     public void SetBrushSize(float size)
