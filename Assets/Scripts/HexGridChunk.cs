@@ -4,6 +4,7 @@ using UnityEngine;
 public class HexGridChunk : MonoBehaviour
 {
     public HexMesh terrain, rivers, roads, water, waterShore, estuaries;
+    public HexFeatureManager features;
     HexCell[] cells;
 	Canvas gridCanvas;
 
@@ -48,6 +49,7 @@ public class HexGridChunk : MonoBehaviour
         water.Clear();
         waterShore.Clear();
         estuaries.Clear();
+        features.Clear();
         for (int i = 0; i < cells.Length; i++)
         {
             Triangulate(cells[i]);
@@ -58,6 +60,7 @@ public class HexGridChunk : MonoBehaviour
         water.Apply();
         waterShore.Apply();
         estuaries.Apply();
+        features.Apply();
     }
 
     void Triangulate(HexCell cell)
@@ -66,6 +69,10 @@ public class HexGridChunk : MonoBehaviour
         {
 			Triangulate(d, cell);
 		}
+        if (!cell.IsUnderwater && !cell.HasRiver && !cell.HasRoads)
+        {
+            features.AddFeature(cell, cell.Position);
+        }
     }
 
     void Triangulate(HexDirection direction, HexCell cell) 
@@ -98,6 +105,11 @@ public class HexGridChunk : MonoBehaviour
         else
         {
             TriangulateWihtoutRiver(direction, cell, center, e);
+
+            if (!cell.IsUnderwater && !cell.HasRoadThroughEdge(direction))
+            {
+                features.AddFeature(cell, (center + e.v1 + e.v5) * (1f / 3f));
+            }
         }
 
         if (direction <= HexDirection.SE) 
@@ -269,6 +281,11 @@ public class HexGridChunk : MonoBehaviour
         EdgeVertices m = new EdgeVertices(Vector3.Lerp(center, e.v1, 0.5f), Vector3.Lerp(center, e.v5, 0.5f));
 		TriangulateEdgeStrip(m, cell.Color, e, cell.Color);
 		TriangulateEdgeFan(center, m, cell.Color);
+
+        if (!cell.IsUnderwater && !cell.HasRoadThroughEdge(direction))
+        {
+            features.AddFeature(cell, (center + e.v1 + e.v5) * (1f / 3f));
+        }
     }
 
     void TriangulateRoadAdjacentToRiver(HexDirection direction, HexCell cell, Vector3 center, EdgeVertices e)
