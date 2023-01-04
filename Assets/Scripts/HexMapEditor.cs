@@ -1,6 +1,6 @@
-using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using System.IO;
 
 public class HexMapEditor : MonoBehaviour
 {
@@ -11,10 +11,9 @@ public class HexMapEditor : MonoBehaviour
         No
     }
     OptionalToggle riverMode, roadMode, walledMode;
-    public Color[] colors;
 	public HexGrid hexGrid;
 
-	Color activeColor;
+    int activeTerrainTypeIndex;
     int activeElevation;
     int activeWaterLevel;
     int activeUrbanLevel, activeFarmLevel, activePlantLevel, activeSpecialIndex;
@@ -26,11 +25,6 @@ public class HexMapEditor : MonoBehaviour
     bool isDrag;
     HexDirection dragDirection;
     HexCell previousCell;
-
-	void Awake() 
-    {
-		SelectColor(0);
-	}
 
     void Update()
     {
@@ -111,9 +105,9 @@ public class HexMapEditor : MonoBehaviour
     {
         if (cell)
         {
-            if (applyColor)
+            if (activeTerrainTypeIndex >= 0)
             {
-                cell.Color = activeColor;
+                cell.TerrainTypeIndex = activeTerrainTypeIndex;
             }
             if (applyElevation)
             {
@@ -199,15 +193,10 @@ public class HexMapEditor : MonoBehaviour
         activeElevation = (int)elevation;
     }
 
-    public void SelectColor(int index) 
+    public void SetTerrainTypeIndex(int index)
     {
-        applyColor = index >= 0;
-        if (applyColor)
-        {
-		    activeColor = colors[index];
-        }
-	}
-
+        activeTerrainTypeIndex = index;
+    }
     public void SetApplyWaterLevel(bool toggle)
     {
         applyWaterLevel = toggle;
@@ -257,4 +246,31 @@ public class HexMapEditor : MonoBehaviour
     {
 		activeSpecialIndex = (int)index;
 	}
+
+    public void Save()
+    {
+        string path = Path.Combine(Application.persistentDataPath, "test.map");
+        using (BinaryWriter writer = new BinaryWriter(File.Open(path, FileMode.Create)))
+        {
+            writer.Write(0);
+            hexGrid.Save(writer);
+        }
+    }
+
+    public void Load()
+    {
+        string path = Path.Combine(Application.persistentDataPath, "test.map");
+        using (BinaryReader reader = new BinaryReader(File.OpenRead(path)))
+        {
+            int header = reader.ReadInt32();
+            if (header == 0)
+            {
+                hexGrid.Load(reader);
+            }
+            else
+            {
+                Debug.LogWarning("Unknown map format " + header);
+            }
+        }
+    }
 }
