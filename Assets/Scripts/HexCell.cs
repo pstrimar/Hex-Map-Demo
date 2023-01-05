@@ -152,6 +152,7 @@ public class HexCell : MonoBehaviour
     public int SearchHeuristic { get; set; }
     public int SearchPriority { get { return distance + SearchHeuristic; } }
     public int SearchPhase { get; set; } // e.g. 0 means the cell has not yet been reached, 1 means that the cell is currently in the frontier, 2 means it has been taken out of the frontier.
+    public HexUnit Unit { get; set; }
 
     [SerializeField] HexCell[] neighbors;
     [SerializeField] bool[] roads;
@@ -178,12 +179,20 @@ public class HexCell : MonoBehaviour
 					neighbor.chunk.Refresh();
 				}
 			}
+            if (Unit)
+            {
+                Unit.ValidateLocation();
+            }
         }
     }
 
     void RefreshSelfOnly() 
     {
 		chunk.Refresh();
+        if (Unit)
+        {
+            Unit.ValidateLocation();
+        }
 	}
 
     void RefreshPosition() 
