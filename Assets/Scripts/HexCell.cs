@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.IO;
 
 public class HexCell : MonoBehaviour
@@ -123,6 +124,15 @@ public class HexCell : MonoBehaviour
             }
         }
     }
+    public int Distance
+    {
+        get { return distance; }
+        set 
+        {
+            distance = value;
+            UpdateDistanceLabel();
+        }
+    }
     public bool IsSpecial { get { return specialIndex > 0; } }
     public bool Walled
     {
@@ -145,6 +155,7 @@ public class HexCell : MonoBehaviour
     int waterLevel;
     int urbanLevel, farmLevel, plantLevel;
     int specialIndex;
+    int distance;
     bool hasIncomingRiver, hasOutgoingRiver;
     bool walled;
     HexDirection incomingRiver, outgoingRiver;
@@ -318,6 +329,12 @@ public class HexCell : MonoBehaviour
 			RemoveIncomingRiver();
 		}
 	}
+
+    void UpdateDistanceLabel()
+    {
+        Text label = uiRect.GetComponent<Text>();
+        label.text = distance == int.MaxValue ? "" : distance.ToString();
+    }
 
     public void Save(BinaryWriter writer)
     {

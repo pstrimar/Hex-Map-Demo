@@ -7,7 +7,7 @@
         {
             "name": "Unity Editor",
             "type": "unity",
-            "path": "/D:/Repos/Hex Map Demo/Library/EditorInstance.json",
+            "path": "/D:/Repos/Hex-Map-Demo/Library/EditorInstance.json",
             "request": "launch"
         },
         {
