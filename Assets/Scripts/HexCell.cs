@@ -130,7 +130,6 @@ public class HexCell : MonoBehaviour
         set 
         {
             distance = value;
-            UpdateDistanceLabel();
         }
     }
     public bool IsSpecial { get { return specialIndex > 0; } }
@@ -152,6 +151,7 @@ public class HexCell : MonoBehaviour
     public HexCell NextWithSamePriority { get; set; }
     public int SearchHeuristic { get; set; }
     public int SearchPriority { get { return distance + SearchHeuristic; } }
+    public int SearchPhase { get; set; } // e.g. 0 means the cell has not yet been reached, 1 means that the cell is currently in the frontier, 2 means it has been taken out of the frontier.
 
     [SerializeField] HexCell[] neighbors;
     [SerializeField] bool[] roads;
@@ -334,10 +334,10 @@ public class HexCell : MonoBehaviour
 		}
 	}
 
-    void UpdateDistanceLabel()
+    public void SetLabel(string text)
     {
-        Text label = uiRect.GetComponent<Text>();
-        label.text = distance == int.MaxValue ? "" : distance.ToString();
+        UnityEngine.UI.Text label = uiRect.GetComponent<Text>();
+        label.text = text;
     }
 
     public void DisableHighlight()
