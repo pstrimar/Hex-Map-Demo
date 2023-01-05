@@ -30,7 +30,6 @@ public static class HexMetrics
     public const float wallElevationOffset = verticalTerraceStepSize;
     public const float wallTowerThreshold = 0.5f;
     public const float bridgeDesignLength = 7f;
-    public static Color[] colors;
     static HexHash[] hashGrid;
     static float[][] featureThresholds =
     {

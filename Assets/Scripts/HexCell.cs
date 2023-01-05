@@ -4,11 +4,6 @@ using System.IO;
 public class HexCell : MonoBehaviour
 {
     public HexGridChunk chunk;
-    public Color Color 
-    {
-		get { return HexMetrics.colors[terrainTypeIndex]; }
-	}
-
     public bool HasRiver { get { return hasIncomingRiver || hasOutgoingRiver; } }
     public bool HasRiverBeginOrEnd { get { return hasIncomingRiver != hasOutgoingRiver; } }
     public bool HasIncomingRiver { get { return hasIncomingRiver; } }
