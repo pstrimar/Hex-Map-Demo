@@ -26,7 +26,7 @@ public class HexMapEditor : MonoBehaviour
     bool isDrag;
     bool editMode;
     HexDirection dragDirection;
-    HexCell previousCell;
+    HexCell previousCell, searchFromCell, searchToCell;
 
     void Awake() 
     {
@@ -64,9 +64,23 @@ public class HexMapEditor : MonoBehaviour
             {
 			    EditCells(currentCell);
             }
-            else
+            else if (Input.GetKey(KeyCode.LeftShift) && searchToCell != currentCell)
             {
-                hexGrid.FindDistancesTo(currentCell);
+                if (searchFromCell)
+                {
+                    searchFromCell.DisableHighlight();
+                }
+                searchFromCell = currentCell;
+                searchFromCell.EnableHighlight(Color.blue);
+                if (searchToCell)
+                {
+                    hexGrid.FindPath(searchFromCell, searchToCell);
+                }
+            }
+            else if (searchFromCell && searchFromCell != currentCell)
+            {
+                searchToCell = currentCell;
+                hexGrid.FindPath(searchFromCell, searchToCell);
             }
             previousCell = currentCell;
 		}
