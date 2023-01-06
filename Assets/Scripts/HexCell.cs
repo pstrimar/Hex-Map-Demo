@@ -48,7 +48,7 @@ public class HexCell : MonoBehaviour
             if (terrainTypeIndex != value)
             {
                 terrainTypeIndex = value;
-                Refresh();
+                ShaderData.RefreshTerrain(this);
             }
         }
     }
@@ -145,6 +145,7 @@ public class HexCell : MonoBehaviour
             }
         }
     }
+    public bool IsVisible { get { return visibility > 0; } }
     public bool IsUnderwater { get { return waterLevel > elevation; } }
     public HexDirection RiverBeginOrEndDirection { get { return hasIncomingRiver ? incomingRiver : outgoingRiver; } }
     public HexCell PathFrom { get; set; }
@@ -153,6 +154,8 @@ public class HexCell : MonoBehaviour
     public int SearchPriority { get { return distance + SearchHeuristic; } }
     public int SearchPhase { get; set; } // e.g. 0 means the cell has not yet been reached, 1 means that the cell is currently in the frontier, 2 means it has been taken out of the frontier.
     public HexUnit Unit { get; set; }
+    public HexCellShaderData ShaderData { get; set; }
+    public int Index { get; set; }
 
     [SerializeField] HexCell[] neighbors;
     [SerializeField] bool[] roads;
@@ -161,6 +164,7 @@ public class HexCell : MonoBehaviour
     int urbanLevel, farmLevel, plantLevel;
     int specialIndex;
     int distance;
+    int visibility;
     bool hasIncomingRiver, hasOutgoingRiver;
     bool walled;
     HexDirection incomingRiver, outgoingRiver;
@@ -362,6 +366,24 @@ public class HexCell : MonoBehaviour
         highlight.enabled = true;
     }
 
+    public void IncreaseVisibility()
+    {
+        visibility += 1;
+        if (visibility == 1)
+        {
+            ShaderData.RefreshVisibility(this);
+        }
+    }
+
+    public void DecreaseVisibility()
+    {
+        visibility -= 1;
+        if (visibility == 0)
+        {
+            ShaderData.RefreshVisibility(this);
+        }
+    }
+
     public void Save(BinaryWriter writer)
     {
         writer.Write((byte)terrainTypeIndex);
@@ -405,6 +427,7 @@ public class HexCell : MonoBehaviour
     public void Load(BinaryReader reader)
     {
         terrainTypeIndex = reader.ReadByte();
+        ShaderData.RefreshTerrain(this);
         elevation = reader.ReadByte();
         RefreshPosition();
 		waterLevel = reader.ReadByte();
