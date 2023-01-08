@@ -230,7 +230,7 @@ public class HexGridChunk : MonoBehaviour
 		}
 	}
 
-	void TriangulateEstuary (EdgeVertices e1, EdgeVertices e2, bool incomingRiver, Vector3 indices)  
+	void TriangulateEstuary(EdgeVertices e1, EdgeVertices e2, bool incomingRiver, Vector3 indices)  
     {
 		waterShore.AddTriangle(e2.v1, e1.v2, e1.v1);
 		waterShore.AddTriangle(e2.v5, e1.v5, e1.v4);
