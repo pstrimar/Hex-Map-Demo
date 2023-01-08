@@ -6876,8 +6876,8 @@ Camera:
   m_GameObject: {fileID: 963194225}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0.40784314, g: 0.38039216, b: 0.35686275, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -11317,7 +11317,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellCountX: 20
   cellCountZ: 15
-  touchedColor: {r: 1, g: 0, b: 1, a: 1}
   cellLabelPrefab: {fileID: 8562257609742561311, guid: bc4f5e5f8e989fc4aba98599bc176ead, type: 3}
   cellPrefab: {fileID: 6504531366574068359, guid: ecfaf1b3a3e46e6419322a19650ecd75, type: 3}
   noiseSource: {fileID: 2800000, guid: f903fe7b4aa9cfe42babd0f63f44bdad, type: 3}

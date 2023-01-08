@@ -146,6 +146,7 @@ public class HexCell : MonoBehaviour
         }
     }
     public bool IsVisible { get { return visibility > 0; } }
+    public bool IsExplored { get; private set; }
     public bool IsUnderwater { get { return waterLevel > elevation; } }
     public HexDirection RiverBeginOrEndDirection { get { return hasIncomingRiver ? incomingRiver : outgoingRiver; } }
     public HexCell PathFrom { get; set; }
@@ -371,6 +372,7 @@ public class HexCell : MonoBehaviour
         visibility += 1;
         if (visibility == 1)
         {
+            IsExplored = true;
             ShaderData.RefreshVisibility(this);
         }
     }
@@ -422,9 +424,10 @@ public class HexCell : MonoBehaviour
 			}
 		}
 		writer.Write((byte)roadFlags);
+        writer.Write(IsExplored);
     }
 
-    public void Load(BinaryReader reader)
+    public void Load(BinaryReader reader, int header)
     {
         terrainTypeIndex = reader.ReadByte();
         ShaderData.RefreshTerrain(this);
@@ -464,5 +467,8 @@ public class HexCell : MonoBehaviour
         {
 			roads[i] = (roadFlags & (1 << i)) != 0;
 		}
+
+        IsExplored = header >= 3 ? reader.ReadBoolean() : false;
+        ShaderData.RefreshVisibility(this);
     }
 }
