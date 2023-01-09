@@ -26,7 +26,12 @@ public class HexCell : MonoBehaviour
             {
                 return;
             }
+            int originalViewElevation = ViewElevation;
             elevation = value;
+            if (ViewElevation != originalViewElevation)
+            {
+                ShaderData.ViewElevationChanged();
+            }
             RefreshPosition();
             ValidateRivers();
 
@@ -69,7 +74,12 @@ public class HexCell : MonoBehaviour
         set 
         {
             if (waterLevel == value) return;
+            int originalViewElevation = ViewElevation;
             waterLevel = value;
+            if (ViewElevation != originalViewElevation)
+            {
+                ShaderData.ViewElevationChanged();
+            }
             ValidateRivers();
             Refresh();            
         }
@@ -145,8 +155,13 @@ public class HexCell : MonoBehaviour
             }
         }
     }
-    public bool IsVisible { get { return visibility > 0; } }
-    public bool IsExplored { get; private set; }
+    public bool IsVisible { get { return visibility > 0 && Explorable; } }
+    public bool Explorable { get; set; }
+    public bool IsExplored
+    {
+        get { return explored && Explorable; }
+        private set { explored = value; }
+    }
     public bool IsUnderwater { get { return waterLevel > elevation; } }
     public HexDirection RiverBeginOrEndDirection { get { return hasIncomingRiver ? incomingRiver : outgoingRiver; } }
     public HexCell PathFrom { get; set; }
@@ -157,6 +172,7 @@ public class HexCell : MonoBehaviour
     public HexUnit Unit { get; set; }
     public HexCellShaderData ShaderData { get; set; }
     public int Index { get; set; }
+    public int ViewElevation { get { return elevation >= waterLevel ? elevation : waterLevel; } }
 
     [SerializeField] HexCell[] neighbors;
     [SerializeField] bool[] roads;
@@ -168,6 +184,7 @@ public class HexCell : MonoBehaviour
     int visibility;
     bool hasIncomingRiver, hasOutgoingRiver;
     bool walled;
+    bool explored;
     HexDirection incomingRiver, outgoingRiver;
     int terrainTypeIndex;
 
@@ -382,6 +399,15 @@ public class HexCell : MonoBehaviour
         visibility -= 1;
         if (visibility == 0)
         {
+            ShaderData.RefreshVisibility(this);
+        }
+    }
+
+    public void ResetVisibility()
+    {
+        if (visibility > 0)
+        {
+            visibility = 0;
             ShaderData.RefreshVisibility(this);
         }
     }
